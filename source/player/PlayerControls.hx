@@ -40,6 +40,8 @@ class PlayerControls extends FlxBasic
 	{
 		switch (preset)
 		{
+			case -1:
+				player = -1;
 			default:
 				player = 0;
 				rebind(Input.UP, FlxKey.UP);
