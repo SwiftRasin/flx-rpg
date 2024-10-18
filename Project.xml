@@ -4,7 +4,7 @@
 
 	<!-- _________________________ Application Settings _________________________ -->
 
-	<app title="RPG GAME" file="RPG GAME" main="Main" version="0.0.1" company="Cartoon_64" />
+	<app title="flx-rpg" file="flx-rpg" main="Main" version="0.0.1" company="Cartoon_64" />
 
 	<!--The flixel preloader is not accurate in Chrome. You can use it regularly if you embed the swf into a html file
 		or you can set the actual size of your file manually at "FlxPreloaderBase-onUpdate-bytesTotal"-->

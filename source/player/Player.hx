@@ -27,8 +27,8 @@ class Player extends FlxObject
 
 	public var bodyParts:BodyParts;
 
-	public var movementSettings:Map<String, Float> = ["def" => 1, "ice" => 0.3];
-	public var frictionSettings:Map<String, Float> = ["def" => 0.7, "ice" => 0.95];
+	public var movementSettings:Map<String, Float> = ["def" => 1, "ice" => 0.1];
+	public var frictionSettings:Map<String, Float> = ["def" => 0.7, "ice" => 0.98];
 
 	public var speed:Float;
 

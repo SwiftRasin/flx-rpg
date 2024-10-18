@@ -15,6 +15,11 @@ class Assets
         return OpenFL_Assets.exists("assets/" + root + "/" + path);
     }
 
+	public static function checkRawPath(path:String)
+	{
+		return OpenFL_Assets.exists(path);
+	}
+
     public static function getFile(path:String):String
     {
         var finalPath = "assets/shared" + "/" + path;
@@ -39,4 +44,15 @@ class Assets
     {
         return Lime_Assets.getAsset(path, TEXT, false);
     }
+	public static function mus(path:String):String
+	{
+		var finalPath = "";
+		if (checkRawPath(getFile("music/" + path + ".ogg")))
+			finalPath = getFile("music/" + path + ".ogg");
+		else if (checkRawPath(getFile("music/" + path + ".wav")))
+			finalPath = getFile("music/" + path + ".wav");
+		else
+			finalPath = getFile("music/" + path + ".mp3");
+		return finalPath;
+	}
 }
