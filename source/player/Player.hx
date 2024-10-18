@@ -69,6 +69,12 @@ class Player extends FlxObject
 		return settings.settings["Controls"].value.getBind(bind);
 	}
 
+	public function changeCostume(newCostume:String)
+	{
+		settings.settings["Skin"].value = newCostume;
+		initPlayer();
+	}
+
 	public function initPlayer()
 	{
 		if (bodyParts.members.length > 0)
@@ -136,6 +142,9 @@ class Player extends FlxObject
 
 			part.x = x + part.mOffset.x;
 			part.y = y + part.mOffset.y + extraOffset;
+			part.visible = true;
+			if (!visible)
+				part.visible = false;
 		},false);
 	}
 

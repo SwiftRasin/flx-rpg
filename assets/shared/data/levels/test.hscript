@@ -1,0 +1,24 @@
+trace("it works!");
+trace("instance thing: " + instance.players);
+
+//var bg:FlxSprite;
+
+create = function()
+{
+    var bg = new FlxSprite(0,0).loadGraphic(Assets.getFile("images/bg/grid_bg.png"));
+    instance.add(bg);
+}
+
+
+createPost = function()
+{
+    instance.players.forEach(function(plr) {
+        if (plr.settings.player == 0)
+            plr.changeCostume("c64");
+        else
+            trace("couldn't change costume.");
+    });
+}
+
+
+//trace("instance thing: " + instance.players[0]);

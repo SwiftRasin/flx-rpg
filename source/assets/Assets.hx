@@ -20,8 +20,8 @@ class Assets
         var finalPath = "assets/shared" + "/" + path;
         if (GameUtil.level != "" || GameUtil.level == null)
         {
-            if (checkPath(path, GameUtil.level))
-                finalPath = "assets/" + GameUtil.level + "/" + path;
+			if (checkPath(path, "levels/" + GameUtil.level))
+				finalPath = "assets/levels/" + GameUtil.level + "/" + path;
         }
         return finalPath;
     }
