@@ -1,0 +1,11 @@
+<vbox style="padding: 5px;">
+    <vbox height="15px"></vbox>
+    <vbox>
+        <button id="exit" text="close"/>
+        <tabview id="tabs" width="240" height="275" styleName="rounded-tabs full-width-buttons">
+            <box id="run" text="Run Script...">
+                
+            </box>
+        </tabview>
+    </vbox>
+</vbox>

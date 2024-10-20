@@ -24,12 +24,12 @@ class WorldSettings
             "", [true]),
     ];
 
-    public function setValue(key:String, newValue:Dynamic)
+	public static function setValue(key:String, newValue:Dynamic)
     {
         settings[key].value = newValue;
     }
 
-    public function getValue(key:String)
+	public static function getValue(key:String)
     {
         return settings[key].value;
     }

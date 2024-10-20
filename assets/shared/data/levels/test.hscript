@@ -1,7 +1,13 @@
-trace("it works!");
-trace("instance thing: " + instance.players);
+//@import flixel.FlxSprite;
+//@import assets.Assets;
+//@import flixel.FlxG;
 
-var bool = true;
+trace("it works!");
+trace("testing classes");
+trace(FlxSprite);
+trace(Assets);
+trace(FlxG);
+//trace("instance thing: " + instance.players);
 
 //var bg:FlxSprite;
 
@@ -9,48 +15,25 @@ create = function()
 {
     var bg = new FlxSprite(0,0).loadGraphic(Assets.getFile("images/bg/grid_bg.png"));
     instance.add(bg);
+    var bg2 = new FlxSprite(400,0).loadGraphic(Assets.getFile("images/bg/grid_bg.png"));
+    instance.add(bg2);
     trace(Assets.mus("drums_test"));
     FlxG.sound.playMusic(Assets.mus("drums_test"));
 }
 
 updatePost = function()
 {
-    if (FlxG.keys.justPressed.I)
-    {
-        bool = !bool;
-    }
-    instance.players.forEach(function(plr) {
-        //if (plr.settings.player == 0) {
-            //plr.changeCostume("c64");
-                //bool = !bool;
-            if (bool)
-            {
-                plr.speed = plr.movementSettings["def"];
-                plr.friction = plr.frictionSettings["def"];
-            }
-            else
-            {
-                plr.speed = plr.movementSettings["ice"];
-                plr.friction = plr.frictionSettings["ice"];
-            }   
-        //}
-        //else
-        //    trace("couldn't change costume.");
-    });
+    //
 }
 
 
 createPost = function()
 {
-    
-    instance.players.forEach(function(plr) {
-        if (plr.settings.player == 0) {
-            //plr.changeCostume("c64");
-        }
-        else
-            trace("couldn't change costume.");
-    });
-    
+    instance.cameraBounds.min.x = 0;
+    instance.cameraBounds.min.y = 0;
+
+    instance.cameraBounds.max.x = 800;
+    instance.cameraBounds.max.y = 400;
 }
 
 

@@ -1,13 +1,14 @@
 package settings;
-
-import battle.*;
-import flixel.FlxBasic;
-import player.*;
 import settings.Settings;
 
 class Storage
 {
 	public static var storage:Array<PlayerSettings> = [];
+
+	public static function add(s:PlayerSettings) // "s" stands for "settings"
+	{
+		storage.push(s);
+	}
 
 	public static function clear()
 	{

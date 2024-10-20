@@ -1,11 +1,14 @@
 package;
 
 import assets.Assets;
+import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.group.FlxGroup.FlxTypedGroup;
+import flixel.math.FlxMath;
+import flixel.math.FlxPoint;
 import game.GameUtil;
 import player.Player;
 import player.PlayerColor;
@@ -18,6 +21,9 @@ class PlayState extends FlxState
 
 	public var players:FlxTypedGroup<Player>;
 
+	public var camGAME:FlxCamera;
+	public var camHUD:FlxCamera;
+
 	// var bg:FlxSprite;
 	// public function new(?level:String)
 	// {
@@ -28,6 +34,13 @@ class PlayState extends FlxState
 	// 	super();
 	// }
 	public var level:String = '';
+
+	public var cameraBounds:Bounds;
+	public var freeCam:Bool = true;
+	public var focusedPlayer:Int = 0;
+
+	public var paused:Bool = false;
+
 
 	public var onCreate:Void->Void;
 	public var onCreatePost:Void->Void;
@@ -42,11 +55,20 @@ class PlayState extends FlxState
 		if (scr != null)
 			scr();
 		// else
-		// 	trace(name + " couldn't be executed because it was never initialized.");
+		// trace(name + " couldn't be executed because it was never initialized.");
+	}
+
+	public function new()
+	{
+		super();
+		// instance = this;
 	}
 
 	override public function create()
 	{
+		// this.persistentUpdate = true;
+		// this.persistentDraw = true;
+		
 		/*
 			actually init level
 		 */
@@ -58,38 +80,23 @@ class PlayState extends FlxState
 
 		level = GameUtil.level;
 
+		cameraBounds = new Bounds(new FlxPoint(0, 0), new FlxPoint(400, 400));
+
+		camGAME = new FlxCamera();
+		camHUD = new FlxCamera();
+		camHUD.bgColor.alpha = 0;
+
+		FlxG.cameras.reset(camGAME);
+		FlxG.cameras.add(camHUD, false);
+
 		/*	do the level shit */
-		var script = Assets.getTxt("assets/shared/data/levels/" + level + ".hscript");
-		var parser = new hscript.Parser();
-		var program = parser.parseString(script);
-		var interp = new hscript.Interp();
-		interp.variables.set("Math", Math);
-		interp.variables.set("Assets", Assets);
-		interp.variables.set("FlxG", FlxG);
-		interp.variables.set("Player", Player);
-		// interp.variables.set("players", players);
-		interp.variables.set("PlayerColor", PlayerColor);
-		interp.variables.set("PlayerControls", PlayerControls);
-		// interp.variables.set("Settings", Settings);
-		interp.variables.set("PlayerSettings", PlayerSettings);
-		interp.variables.set("WorldSettings", WorldSettings);
-		interp.variables.set("GameUtil", GameUtil);
-		interp.variables.set("BattleUtil", battle.BattleUtil);
+		var util = ScriptUtil.makeLevelScript(onCreate, onCreatePre, onCreatePost, onUpdate, onUpdatePre, onUpdatePost);
+		var script = util.script;
+		// var parser = util.parser;
+		var program = util.program;
+		var interp = util.interp;
+
 		interp.variables.set("instance", this);
-		interp.variables.set("PlayState", PlayState);
-		interp.variables.set("FlxSprite", FlxSprite);
-		interp.variables.set("FlxObject", FlxObject);
-
-		interp.variables.set("BodyPart", player.body.BodyPart);
-		interp.variables.set("BodyParts", player.body.BodyParts);
-		// interp.variables.set("source", source);
-
-		interp.variables.set("create", onCreate);
-		interp.variables.set("update", onUpdate);
-		interp.variables.set("createPost", onCreatePost);
-		interp.variables.set("updatePost", onUpdatePost);
-		interp.variables.set("createPre", onCreatePre);
-		interp.variables.set("updatePre", onUpdatePre);
 
 		interp.execute(program);
 
@@ -103,9 +110,6 @@ class PlayState extends FlxState
 
 		exec(onCreatePre, "createPre");
 
-		// bg = new FlxSprite(0,0).loadGraphic(Assets.getFile("images/bg/grid_bg.png"));
-		// add(bg);
-
 		exec(onCreate, "create");
 
 		players = new FlxTypedGroup<Player>();
@@ -117,9 +121,13 @@ class PlayState extends FlxState
 		players.add(player1);
 
 		FlxG.watch.add(player1, "vel", "player1.vel: ");
+		FlxG.watch.add(FlxG.camera.x, "camera.x: ");
+		FlxG.watch.add(FlxG.camera.y, "camera.y: ");
 
 		super.create();
 		exec(onCreatePost, "createPost");
+		FlxG.camera.follow(players.members[focusedPlayer], 0.1);
+		FlxG.camera.snapToTarget();
 	}
 
 	override public function update(elapsed:Float)
@@ -127,34 +135,63 @@ class PlayState extends FlxState
 		exec(onUpdatePre, "updatePre");
 		//trace("- " + (players != null));
 		//trace((player1 != null));
-		players.forEach(function(player:Player)
+		if (!paused)
 		{
-			//trace("x: " + player.x);
-			//trace("y: " + player.y);
-			if (FlxG.keys.anyPressed([player.getControl(UP)]))
+			players.forEach(function(player:Player)
 			{
-				player.vel.y -= player.speed;
-			}
-			if (FlxG.keys.anyPressed([player.getControl(DOWN)]))
-			{
-				player.vel.y += player.speed;
-			}
-			if (FlxG.keys.anyPressed([player.getControl(LEFT)]))
-			{
-				player.vel.x -= player.speed;
-			}
-			if (FlxG.keys.anyPressed([player.getControl(RIGHT)]))
-			{
-				player.vel.x += player.speed;
-			}
-		});
+				// trace("x: " + player.x);
+				// trace("y: " + player.y);
+				if (FlxG.keys.anyPressed([player.getControl(UP)]))
+				{
+					player.vel.y -= player.speed;
+				}
+				if (FlxG.keys.anyPressed([player.getControl(DOWN)]))
+				{
+					player.vel.y += player.speed;
+				}
+				if (FlxG.keys.anyPressed([player.getControl(LEFT)]))
+				{
+					player.vel.x -= player.speed;
+				}
+				if (FlxG.keys.anyPressed([player.getControl(RIGHT)]))
+				{
+					player.vel.x += player.speed;
+				}
+			});
+		}
+		
 		exec(onUpdate, "update");
 
-		if (FlxG.keys.justPressed.HOME || FlxG.keys.justPressed.SLASH)
+		if (FlxG.keys.justPressed.HOME || FlxG.keys.justPressed.SLASH && !paused)
 		{
-			openSubState(new debug.DebugMenu());
+			paused = true;
+			openSubState(new debug.DebugMenu(this));
 		}
 		super.update(elapsed);
+		if (freeCam)
+			FlxG.camera.follow(players.members[focusedPlayer], 0.1);
+		else
+			FlxG.camera.follow(null);
+
+		// if (FlxG.keys.justPressed.BACKSPACE && paused)
+		// {
+		// 	closeSubState();
+		// 	paused = false;
+		// }
+
+		// FlxG.camera.deadzone = new flixel.math.FlxRect(cameraBounds.min.x, cameraBounds.min.y, cameraBounds.max.x, cameraBounds.max.y);
+		// if (FlxG.camera.x > cameraBounds.max.x)
+		// 	FlxG.camera.x = cameraBounds.max.x;
+		// if (FlxG.camera.x < cameraBounds.min.x)
+		// 	FlxG.camera.x = cameraBounds.min.x;
+
+		// if (FlxG.camera.y > cameraBounds.max.y)
+		// 	FlxG.camera.y = cameraBounds.max.y;
+		// if (FlxG.camera.y < cameraBounds.min.y)
+		// 	FlxG.camera.y = cameraBounds.min.y;
+		FlxG.camera.setScrollBounds(cameraBounds.min.x, cameraBounds.max.x, cameraBounds.min.y, cameraBounds.max.y);
+		
+
 		exec(onUpdatePost, "updatePost");
 	}
 }

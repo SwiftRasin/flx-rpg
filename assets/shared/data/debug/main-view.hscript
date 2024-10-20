@@ -1,0 +1,10 @@
+//@import haxe.ui.core.Component;
+//@import haxe.ui.util.ComponentUtil;
+//@import haxe.ui.Toolkit;
+
+
+sheet.findComponent("exit").onClick = function()
+{
+    state.oldState.paused = false;
+    state.oldState.closeSubState();
+}
