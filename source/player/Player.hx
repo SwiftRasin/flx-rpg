@@ -61,21 +61,56 @@ class Player extends FlxObject
 		settings.setValue("Color",color);
 		settings.setValue("Controls",controls);
 		settings.setValue("Skin",skin);
-		trace(settings);
+		// trace(settings.settings);
 	}
 
-	public function getControl(bind:PlayerControls.Input)
+	public function getIndex()
 	{
-		return settings.settings["Controls"].value.getBind(bind);
+		return settings.player;
 	}
 
-	public function changeCostume(newCostume:String)
+	/**
+	 * getting controls easily. 
+	 * @param bind CAN BE A **`PlayerControls.Input`** OR A **`String`**.
+	 */
+	public function getControl(bind:Dynamic)
+	{
+		var truebind:PlayerControls.Input;
+		bind = Std.string(bind);
+		switch (bind.toUpperCase())
+		{
+			case "UP":
+				truebind = PlayerControls.Input.UP;
+			case "DOWN":
+				truebind = PlayerControls.Input.DOWN;
+			case "LEFT":
+				truebind = PlayerControls.Input.LEFT;
+			case "RIGHT":
+				truebind = PlayerControls.Input.RIGHT;
+			case "ACTION":
+				truebind = PlayerControls.Input.ACTION;
+			case "ACTION2":
+				truebind = PlayerControls.Input.ACTION2;
+			case "INTERACT":
+				truebind = PlayerControls.Input.INTERACT;
+
+			case "PAUSE" | "BACK" | "CANCEL":
+				truebind = PlayerControls.Input.PAUSE;
+			case "CONFIRM":
+				truebind = PlayerControls.Input.CONFIRM;
+			default:
+				truebind = bind;
+		}
+		return settings.settings["Controls"].value.getBind(truebind);
+	}
+
+	public function changeCostume(newCostume:String, ?log:Bool = true):Bool
 	{
 		settings.settings["Skin"].value = newCostume;
-		initPlayer();
+		return initPlayer(log);
 	}
 
-	public function initPlayer()
+	public function initPlayer(?log:Bool = true, ?forceSkin:String):Bool
 	{
 		if (bodyParts.members.length > 0)
 		{
@@ -83,9 +118,22 @@ class Player extends FlxObject
 				i.destroy();
 			},false);
 		}
-		trace(Assets.getSkinData(settings.getValue("Skin")));
-		var properties = haxe.Json.parse(Assets.getTxt(Assets.getSkinData(settings.getValue("Skin"))));
-		trace(properties);
+		///trace(Assets.getSkinData(settings.getValue("Skin")));
+		trace("initializing player");
+		var skin = settings.getValue("Skin");
+		if (forceSkin != null)
+			skin = forceSkin;
+		var costumePath = Assets.getSkinData(skin);
+		trace("loading costume with path: " + costumePath);
+		if (!Assets.exists(costumePath))
+		{
+			if (log)
+				openfl.Lib.current.stage.window.alert("costume '" + costumePath + "' doesn't exist.");
+			initPlayer(log, "default");
+			return false;
+		}
+		var properties = haxe.Json.parse(Assets.getTxt(costumePath));
+		///trace(properties);
 		var propKeys = Reflect.fields(properties);
 
 		for (key in propKeys)
@@ -100,12 +148,13 @@ class Player extends FlxObject
 					p.tweening.type, 
 					p.tweening.speed
 				);
-				prop.loadGraphic(Assets.getBodyPart(settings.getValue("Skin"), p.img));
+				prop.loadGraphic(Assets.getBodyPart(skin, p.img));
 				prop.colored = p.colored;
 				prop.alpha = p.alpha;
 				if (p.flipped)
 					prop.flipX = p.flipped;
 				bodyParts.add(prop);
+				trace("just initialized a body part with label '" + prop.label + "', offsets " + prop.mOffset + "");
 			}
 		}
 
@@ -124,6 +173,7 @@ class Player extends FlxObject
 		// var right_hand:BodyPart = new BodyPart(x-15,y, "hand_right", new FlxPoint(-15,0), "cos", 0.75);
 		// right_hand.loadGraphic(Assets.getBodyPart(settings.getValue("Skin"),"hand.png"));
 		// bodyParts.add(right_hand);
+		return true;
 	}
 
 
@@ -169,4 +219,10 @@ class Player extends FlxObject
 		vel.y *= friction;
 		super.update(elapsed);
 	}
+	// override public function destroy()
+	// {
+	// 	// if (bodyParts != null)
+	// 	// 	bodyParts.destroy();
+	// 	super.destroy();
+	// }
 }

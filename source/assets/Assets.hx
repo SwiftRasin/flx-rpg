@@ -1,5 +1,6 @@
 package assets;
 
+import flixel.FlxG;
 import game.GameUtil;
 import lime.utils.Assets as Lime_Assets;
 import openfl.Assets as OpenFL_Assets;
@@ -10,9 +11,14 @@ class Assets
     public static var SND:String = ".ogg";
     public static var MUS:String = ".ogg";
 
+	public static function exists(path:String)
+	{
+		return OpenFL_Assets.exists(path);
+	}
+
     public static function checkPath(path:String, root:String):Bool
     {
-        return OpenFL_Assets.exists("assets/" + root + "/" + path);
+		return exists("assets/" + root + "/" + path);
     }
 
 	public static function checkRawPath(path:String)
@@ -44,15 +50,24 @@ class Assets
     {
         return Lime_Assets.getAsset(path, TEXT, false);
     }
-	public static function mus(path:String):String
+	public static function aud(path:String, type:String)
 	{
 		var finalPath = "";
-		if (checkRawPath(getFile("music/" + path + ".ogg")))
-			finalPath = getFile("music/" + path + ".ogg");
-		else if (checkRawPath(getFile("music/" + path + ".wav")))
-			finalPath = getFile("music/" + path + ".wav");
+		if (checkRawPath(getFile(type + "/" + path + ".ogg")))
+			finalPath = getFile(type + "/" + path + ".ogg");
+		else if (checkRawPath(getFile(type + "/" + path + ".wav")))
+			finalPath = getFile(type + "/" + path + ".wav");
 		else
-			finalPath = getFile("music/" + path + ".mp3");
+			finalPath = getFile(type + "/" + path + ".mp3");
 		return finalPath;
+	}
+	public static function mus(path:String):String
+	{
+		return aud(path, "music");
+	}
+
+	public static function snd(path:String):String
+	{
+		return aud(path, "sounds");
 	}
 }

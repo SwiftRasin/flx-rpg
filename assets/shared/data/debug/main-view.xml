@@ -1,10 +1,53 @@
-<vbox style="padding: 5px;">
+<vbox id="menu" style="padding: 5px;">
     <vbox height="15px"></vbox>
     <vbox>
         <button id="exit" text="close"/>
-        <tabview id="tabs" width="240" height="275" styleName="rounded-tabs full-width-buttons">
-            <box id="run" text="Run Script...">
+        <button id="toMenu" text="main menu"/>
+        <tabview id="tabs" width="375" height="275" styleName="rounded-tabs full-width-buttons">
+            <box id="debug" text="Debug">
+                <label text="Debug"></label>
+            </box>
+            <box id="tools" text="Tools">
+                <vbox>
+                    <vbox>
+                        <label text="Player ID:"/>
+                        <number-stepper id="toolsPlayerSelect" pos="0" step="1" min="0" />
+                    </vbox>
+                    <hbox>
+                        <textfield id="costume" placeholder="costume id"/>
+                        <button id="costumeButton" text="Change Costume"/>    
+                    </hbox>
+                    <!-- <label text="Player Color:"/> -->
+                    <!-- <color-picker-popup id="color" liveTracking="false" onchange="selectedColor.backgroundColor = this.selectedItem" /> -->
+                    
+                </vbox>
+            </box>
+            <box id="log" text="Log">
+                <hbox>
+                    <frame text="Log" collapsible="true">
+                        <scrollview id="logView" scrollMode="inertial" contentHeight="100%" width="200" height="200" style="border: 1px solid #000; padding: 5px; background-color: #fff;">
+                            <label id="logArea" width="500" height="2000" htmlText="if you are reading this, the script has crashed!"/>    
+                        </scrollview>
+                    </frame>
+                    <frame text="Filters" collapsible="true">
+                        <vbox>
+                            <button id="filterALL" text="ALL"></button>
+                            <checkbox id="filterLOG" text="LOG" selected="true"/>
+                            <checkbox id="filterWARN" text="WARN" selected="true"/>
+                            <checkbox id="filterERROR" text="ERROR" selected="true"/>
+                            <hbox>
+                                <checkbox id="filterCUSTOM" text="" selected="false"/>
+                                <textfield id="filterCText" width="75" placeholder="custom filter"/>
+                            </hbox>
+                            
+                        </vbox>
+                    </frame>
+                    
+                </hbox>
                 
+            </box>
+            <box id="run" text="Run">
+                <label text="Run Script..."/>
             </box>
         </tabview>
     </vbox>

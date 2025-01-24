@@ -1,10 +1,140 @@
 //@import haxe.ui.core.Component;
 //@import haxe.ui.util.ComponentUtil;
 //@import haxe.ui.Toolkit;
+//@import player.Player;
+//@import assets.Assets;
+//@import haxe.ui.containers.dialogs.Dialogs;
+//@import game.GameUtil;
+//@import flixel.FlxG;
+//@import menu.MainMenu;
+//@import player.PlayerColor;
 
+var logFilters = GameUtil.defaultLogFilters();
 
 sheet.findComponent("exit").onClick = function()
 {
     state.oldState.paused = false;
     state.oldState.closeSubState();
 }
+sheet.findComponent("toMenu").onClick = function()
+{
+    state.oldState.paused = false;
+    state.oldState.closeSubState();
+    state.oldState.exitToMenu();
+}
+// sheet.findComponent("color").onChange = function()
+// {
+//     state.oldState.players.forEach(function(plr)
+//     {
+//         if (plr.getIndex() == sheet.findComponent("toolsPlayerSelect").pos)
+//         {
+//             trace(sheet.findComponent("color").selectedItem);
+//             //plr.settings.setValue("Color", )
+//             //if (plr.settings.setValue("Color", ))
+//             //{
+//             GameUtil.appendLog("Applied color " + sheet.findComponent("color").selectedItem + " to player idx " + plr.getIndex(), "LOG");
+//             Dialogs.messageBox('More details will be \nprovided in the Log tab.', 'Color Switch Success', 'info');
+//             //}
+//             //else
+//             //{
+//             //    GameUtil.appendLog("the costume \""+sheet.findComponent("costume").text+"\" does not exist.", "ERROR");
+//             //    Dialogs.messageBox('More details will be \nprovided in the Log tab.', 'Costume Switch Fail', 'error');
+//             //}
+//         }
+//     });
+// }
+
+sheet.findComponent("costumeButton").onClick = function()
+{
+    state.oldState.players.forEach(function(plr)
+    {
+        if (plr.getIndex() == sheet.findComponent("toolsPlayerSelect").pos)
+        {
+            if (plr.changeCostume(sheet.findComponent("costume").text, false))
+            {
+                GameUtil.appendLog("Costume of player " + plr.getIndex() + " switched to " + sheet.findComponent("costume").text + "!", "LOG");
+                Dialogs.messageBox('More details will be \nprovided in the Log tab.', 'Costume Switch Success', 'info');
+            }
+            else
+            {
+                GameUtil.appendLog("the costume \""+sheet.findComponent("costume").text+"\" does not exist.", "ERROR");
+                Dialogs.messageBox('More details will be \nprovided in the Log tab.', 'Costume Switch Fail', 'error');
+            }
+        }
+    });
+}
+
+update = function()
+{
+    var fLog = filterLog();
+    //sheet.findComponent("logArea").text = fLog;
+    sheet.findComponent("logArea").htmlText = fLog;
+
+    sheet.findComponent("logView").contentHeight = ""+(100+((GameUtil.log.split("\n").length)*10))+"%";
+
+    if (FlxG.keys.justPressed.NUMPADTWO)
+    {
+        GameUtil.appendLog("append LOG test", "LOG");
+        GameUtil.appendLog("append WARN test", "WARN");
+        GameUtil.appendLog("append ERROR test", "ERROR");
+        GameUtil.appendLog("append TEST test", "TEST");
+    }
+}
+
+sheet.findComponent("filterALL").onClick = function()
+{
+    sheet.findComponent("filterLOG").selected = true;
+    sheet.findComponent("filterWARN").selected = true;
+    sheet.findComponent("filterERROR").selected = true;
+    sheet.findComponent("filterCUSTOM").selected = true;
+}
+
+filterLog = function()
+{
+    logFilters.LOG = sheet.findComponent("filterLOG").selected;
+    logFilters.WARN = sheet.findComponent("filterWARN").selected;
+    logFilters.ERROR = sheet.findComponent("filterERROR").selected;
+    logFilters.CUSTOM.enabled = sheet.findComponent("filterCUSTOM").selected;
+    logFilters.CUSTOM.id = sheet.findComponent("filterCText").text;
+
+    var newLog = "";
+    var newLogList = GameUtil.log.split("@");
+
+    for (i in 0...newLogList.length)
+    {
+        //trace(newLogList[i]);
+        newLogList[i] = filterLine(newLogList[i], (logFilters.CUSTOM.id != "" && logFilters.CUSTOM.id != null) ? logFilters.CUSTOM.id : null, logFilters.CUSTOM.enabled, "ffffff");
+        newLogList[i] = filterLine(newLogList[i], "LOG", logFilters.LOG, "77d5ff");
+        newLogList[i] = filterLine(newLogList[i], "WARN", logFilters.WARN, "ffcc31");
+        newLogList[i] = filterLine(newLogList[i], "ERROR", logFilters.ERROR, "ff6c72");
+        newLog += newLogList[i];
+    }
+
+    return newLog;
+}
+
+checkType = function(input,type)
+{
+    return (input.indexOf("@TYPE: "+type) != -1);
+}
+
+filterLine = function(line, type, filter, color)
+{
+    //trace("FILTERING " + type + " " + filter);
+    if (checkType("@"+line,type) && !filter)
+    {
+        line = "";
+    }
+    else
+    {
+        //line = "<font color='#"+color+"'>" + line + "</font>";
+        //trace("NOT FILTERED");
+    }
+    if (checkType("@"+line,type) && filter)
+        line = "<font color='#"+color+"'>" + line + "</font>";
+    return line;
+}
+
+GameUtil.appendLog("Hello! This is the log! Debug messages will be stored here!", "LOG");
+
+

@@ -24,6 +24,12 @@ class WorldSettings
             "", [true]),
     ];
 
+	public static function restore(newSettings:Map<String, Setting>)
+	{
+		settings = newSettings;
+	}
+
+	// ! settings.set() DOES NOT WORK! use this instead:
 	public static function setValue(key:String, newValue:Dynamic)
     {
         settings[key].value = newValue;
@@ -34,6 +40,7 @@ class WorldSettings
         return settings[key].value;
     }
 
+	// ! WARNING: Resets all settings.. pretty obvious
     public static function resetAllSettings()
     {
         for (s in settings)
@@ -42,6 +49,7 @@ class WorldSettings
         }
     }
 
+	// ! WARNING: Resets given setting.. pretty obvious
     public static function resetSetting(key:String)
     {
         settings[key].value = settings[key].def[0];
@@ -87,6 +95,12 @@ class PlayerSettings extends FlxBasic
     
     ];  
 
+	public function restore(newSettings:Map<String, Setting>)
+	{
+		settings = newSettings;
+	}
+
+	// ! settings.set() DOES NOT WORK! use this instead:
     public function setValue(key:String, newValue:Dynamic)
     {
         settings[key].value = newValue;
@@ -97,6 +111,7 @@ class PlayerSettings extends FlxBasic
         return settings[key].value;
     }
 
+	// ! WARNING: Resets all settings.. pretty obvious
     public function resetAllSettings()
     {
         for (s in settings)
@@ -108,6 +123,7 @@ class PlayerSettings extends FlxBasic
         }
     }
 
+	// ! WARNING: Resets given setting.. pretty obvious
     public function resetSetting(key:String)
     {
         var i = player;

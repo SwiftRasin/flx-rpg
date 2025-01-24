@@ -10,12 +10,13 @@ import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 import game.GameUtil;
+import menu.MainMenu;
 import player.Player;
 import player.PlayerColor;
 import player.PlayerControls;
 import settings.Settings;
 
-class PlayState extends FlxState
+class PlayState extends state.State
 {
 	// public static var level:String = "";
 
@@ -39,6 +40,8 @@ class PlayState extends FlxState
 	public var freeCam:Bool = true;
 	public var focusedPlayer:Int = 0;
 
+	public var camFocus:FlxObject;
+
 	public var paused:Bool = false;
 
 
@@ -50,6 +53,8 @@ class PlayState extends FlxState
 	public var onCreatePre:Void->Void;
 	public var onUpdatePre:Void->Void;
 
+	public var spawnPoint:FlxPoint;
+
 	function exec(scr:Void->Void, ?name:String = "func")
 	{
 		if (scr != null)
@@ -57,17 +62,29 @@ class PlayState extends FlxState
 		// else
 		// trace(name + " couldn't be executed because it was never initialized.");
 	}
-
-	public function new()
+	function exitToMenu()
 	{
-		super();
-		// instance = this;
+		players.forEach(function(plr:Player)
+		{
+			plr.destroy();
+		});
+		FlxG.switchState(new MainMenu());
 	}
+
+	// // var bg:FlxSprite;
+	// public function new(?level:String)
+	// {
+	// 	if (level != null)
+	// 		GameUtil.level = level;
+	// 	if (GameUtil.level == "")
+	// 		GameUtil.level = "test";
+	// 	super();
+	// }
 
 	override public function create()
 	{
-		// this.persistentUpdate = true;
-		// this.persistentDraw = true;
+		this.persistentUpdate = true;
+		this.persistentDraw = true;
 		
 		/*
 			actually init level
@@ -75,7 +92,7 @@ class PlayState extends FlxState
 
 		if (level != null)
 			GameUtil.level = level;
-		if (GameUtil.level == "")
+		if (GameUtil.level == "" || GameUtil.level == null)
 			GameUtil.level = "test";
 
 		level = GameUtil.level;
@@ -85,6 +102,11 @@ class PlayState extends FlxState
 		camGAME = new FlxCamera();
 		camHUD = new FlxCamera();
 		camHUD.bgColor.alpha = 0;
+
+		camFocus = new FlxObject(cameraBounds.min.x, cameraBounds.min.y);
+		add(camFocus);
+
+		spawnPoint = new FlxPoint(0, 0);
 
 		FlxG.cameras.reset(camGAME);
 		FlxG.cameras.add(camHUD, false);
@@ -98,7 +120,7 @@ class PlayState extends FlxState
 
 		interp.variables.set("instance", this);
 
-		interp.execute(program);
+		game.ScriptEnvironment.run(interp, program); // interp.execute(program);
 
 		onCreatePre = interp.variables.get("createPre");
 		onCreate = interp.variables.get("create");
@@ -110,15 +132,27 @@ class PlayState extends FlxState
 
 		exec(onCreatePre, "createPre");
 
-		exec(onCreate, "create");
-
 		players = new FlxTypedGroup<Player>();
 		add(players);
 		//add(player1);
 
-		var player1 = new Player(0, 100, 200, new PlayerColor(0), "stinky", new PlayerControls(0), "dummy");
+		var player1 = new Player(0, spawnPoint.x, spawnPoint.y, new PlayerColor(0), "stinky", new PlayerControls(0), "default");
 		add(player1);
 		players.add(player1);
+		if (GameUtil.players > 1)
+		{
+			var player2 = new Player(1, spawnPoint.x + 100, spawnPoint.y + 100, new PlayerColor(1), "stinky", new PlayerControls(1), "default");
+			add(player2);
+			players.add(player2);
+		}
+		if (GameUtil.players > 2)
+		{
+			var player2 = new Player(2, spawnPoint.x + 200, spawnPoint.y + 200, new PlayerColor(2), "stinky", new PlayerControls(2), "default");
+			add(player2);
+			players.add(player2);
+		}
+
+		exec(onCreate, "create");
 
 		FlxG.watch.add(player1, "vel", "player1.vel: ");
 		FlxG.watch.add(FlxG.camera.x, "camera.x: ");
@@ -135,6 +169,7 @@ class PlayState extends FlxState
 		exec(onUpdatePre, "updatePre");
 		//trace("- " + (players != null));
 		//trace((player1 != null));
+
 		if (!paused)
 		{
 			players.forEach(function(player:Player)
@@ -169,9 +204,38 @@ class PlayState extends FlxState
 		}
 		super.update(elapsed);
 		if (freeCam)
-			FlxG.camera.follow(players.members[focusedPlayer], 0.1);
+		{
+			if (WorldSettings.settings["CoCamera"].value)
+			{
+				camFocus.x = players.members[focusedPlayer].x;
+				camFocus.y = players.members[focusedPlayer].y;
+			}
+			else
+			{
+				var avgPos:Array<Float> = [0, 0];
+				var sums:Array<Float> = [0, 0];
+				for (i in 0...players.members.length)
+				{
+					sums[0] += players.members[i].x;
+					sums[1] += players.members[i].y;
+				}
+
+				avgPos[0] = sums[0] / players.members.length;
+				avgPos[1] = sums[1] / players.members.length;
+
+				// camera.x = lerp(camera.x, avgPos[0], 0.1);
+				// camera.y = lerp(camera.y, avgPos[1], 0.1);
+				camFocus.x = avgPos[0];
+				camFocus.y = avgPos[1];
+			}
+		}
 		else
+		{
 			FlxG.camera.follow(null);
+		}
+
+		FlxG.camera.follow(camFocus, 0.1);
+		
 
 		// if (FlxG.keys.justPressed.BACKSPACE && paused)
 		// {

@@ -1,0 +1,8 @@
+{
+    "mods": [
+        {
+            "name": "testMod",
+            "enabled":true
+        }
+    ]
+}
