@@ -46,6 +46,21 @@ class Assets
         return getFile("data/costumes/"+skin+"/properties.json");
     }
 
+	public static function getPortPart(port:String, path:String)
+	{
+		return getFile("images/ui/dialogue/ports/" + port + "/" + path);
+	}
+
+	public static function getPortData(port:String)
+	{
+		return getFile("data/ports/" + port + "/port.json");
+	}
+
+	public static function getUIImage(path:String)
+	{
+		return getFile("images/ui/" + path);
+	}
+
     public static function getTxt(path:String):Dynamic
     {
         return Lime_Assets.getAsset(path, TEXT, false);

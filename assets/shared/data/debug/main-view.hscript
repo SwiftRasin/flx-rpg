@@ -8,6 +8,8 @@
 //@import flixel.FlxG;
 //@import menu.MainMenu;
 //@import player.PlayerColor;
+//@import ui.dialogue.DialogueSubState;
+//@import settings.Storage;
 
 var logFilters = GameUtil.defaultLogFilters();
 
@@ -21,6 +23,16 @@ sheet.findComponent("toMenu").onClick = function()
     state.oldState.paused = false;
     state.oldState.closeSubState();
     state.oldState.exitToMenu();
+}
+sheet.findComponent("diaTest").onClick = function()
+{
+    state.oldState.paused = false;
+    state.oldState.closeSubState();
+    state.oldState.openSubState(new DialogueSubState("base/test.json"));
+}
+sheet.findComponent("storageTest").onClick = function()
+{
+    Storage.test(state.oldState.getPlayerSettings(0));
 }
 // sheet.findComponent("color").onChange = function()
 // {

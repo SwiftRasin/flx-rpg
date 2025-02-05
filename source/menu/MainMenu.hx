@@ -11,6 +11,8 @@ import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import game.GameUtil;
 import lime.system.System;
+import settings.Settings.PlayerSettings;
+import ui.dialogue.DialogueSubState;
 
 class MainMenu extends NiceMenu
 {
@@ -35,24 +37,34 @@ class MainMenu extends NiceMenu
 			// "%main%battle test",
 			"%main%options",
 			"%main%extras",
+			"%main%debug",
+
 			"%options%back",
 			"%options%save data",
 			"%options%quit",
+
 			"%play%back",
 			"%play%singleplayer",
 			"%play%multiplayer",
+
 			"%config%back",
 			"%config%2 player",
 			"%config%3 player", // ,"%config%4P"
+
 			"%extras%back",
-			"%extras%sound test"
+			"%extras%sound test",
+
+			"%debug%back",
+			"%debug%open\nDialogueSubState",
+			"%debug%storage test"
 		];
 		themes = [
 			"main" => [0xFFffffff, 0xFFffff00],
 			"options" => [0xFF9facff, 0xffffffff],
 			"play" => [0xFF9facff, 0xffffffff],
 			"config" => [0xffff4646, 0xffffffff],
-			"extras" => [0xff3ea14d, 0xffffffff]
+			"extras" => [0xff3ea14d, 0xffffffff],
+			"debug" => [0xff8d3bf7, 0xffffffff]
 		];
 	}
 
@@ -131,10 +143,18 @@ class MainMenu extends NiceMenu
 				FlxG.switchState(new SoundTest());
 			case "%options%save data":
 				menu_error();
-			case "%options%back" | "%play%back" | "%config%back" | "%extras%back":
+			case "%options%back" | "%play%back" | "%config%back" | "%extras%back" | "%debug%back":
 				// do something
 				changeID("main");
 				menu_back();
+			case "%main%debug":
+				changeID("debug");
+				menu_confirm();
+			case "%debug%open\nDialogueSubState":
+				openSubState(new ui.dialogue.DialogueSubState("base/test.json"));
+			case "%debug%storage test":
+				settings.Storage.test(new PlayerSettings(0));
+
 		}
 	}
 

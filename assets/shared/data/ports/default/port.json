@@ -1,0 +1,24 @@
+{
+    "default": [
+        {
+            "sound": "dia0"
+        },
+        {
+            "label": "head",
+            "img": "head.png",
+            "offset": [0,0],
+            "scale": [8,8],
+            "alpha": 1,
+            "colored": true
+        },
+        {
+            "label": "body",
+            "img": "body.png",
+            "offset": [0,108],
+            "scale": [8,8],
+            "alpha": 1,
+            "colored": true
+        }
+    ]
+        
+}

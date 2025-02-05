@@ -10,7 +10,7 @@ import haxe.ui.Toolkit;
 import haxe.ui.core.Component;
 import haxe.ui.themes.Theme;
 
-class DebugMenu extends FlxSubState
+class DebugMenu extends state.State.SubState
 {
 
 	var dbm:FlxSprite;

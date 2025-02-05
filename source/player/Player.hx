@@ -110,6 +110,11 @@ class Player extends FlxObject
 		return initPlayer(log);
 	}
 
+	public function getBasicColor()
+	{
+		return settings.settings["Color"].value.basic;
+	}
+
 	public function initPlayer(?log:Bool = true, ?forceSkin:String):Bool
 	{
 		if (bodyParts.members.length > 0)

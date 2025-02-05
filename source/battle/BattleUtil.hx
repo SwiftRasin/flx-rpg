@@ -28,7 +28,7 @@ class Moveset extends FlxBasic
 enum MoveType
 {
     Rough; //Rough; Physical; it's like a punch, or kick or whatever.
-    Magic; //Magic; Wizardry; it's like a special move that costs sp.
+	Magic; // Magic; Wizardry; it's like a special move that costs SP.
 }
 
 typedef Move =

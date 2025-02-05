@@ -56,6 +56,7 @@ class SoundTest extends NiceMenu
 			"%music%drums_easy",
 			"%music%drums_test",
 			"%music%menu",
+			"%music%menu_alt",
 			"%music%scary",
 			"%music%scary-stem_cloudy",
 			"%music%scary-stem_sticks",

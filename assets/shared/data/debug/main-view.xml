@@ -5,7 +5,11 @@
         <button id="toMenu" text="main menu"/>
         <tabview id="tabs" width="375" height="275" styleName="rounded-tabs full-width-buttons">
             <box id="debug" text="Debug">
-                <label text="Debug"></label>
+                <vbox>
+                    <label text="Debug"></label>
+                    <button id="diaTest" text="open DialogueSubState"/>    
+                    <button id="storageTest" text="Storage.test()"/>    
+                </vbox>
             </box>
             <box id="tools" text="Tools">
                 <vbox>

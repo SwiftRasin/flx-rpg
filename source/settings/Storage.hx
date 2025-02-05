@@ -1,4 +1,5 @@
 package settings;
+import haxe.Json;
 import settings.Settings;
 
 class Storage
@@ -16,5 +17,13 @@ class Storage
 		storage = [];
 		trace("storage cleared");
 	}
-	public static function save() {}
+	public static function save()
+	{
+		//
+	}
+
+	public static function test(data:PlayerSettings)
+	{
+		trace(Json.stringify(data));
+	}
 }

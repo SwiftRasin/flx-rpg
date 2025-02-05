@@ -1,0 +1,58 @@
+{
+    "presets": {
+        "def0": [376, 240],
+        "def1": [888, 240]
+    },
+    "box": {
+        "img": "textbox.png",
+        "scale": [8,8],
+        "position": [256, 384],
+        "transition": {
+            "_in": {"type": "fade", "ease": "quadInOut", "startDelay": 0,"duration": 0.5},
+            "_out": {"type": "fade", "ease": "quadInOut", "startDelay": 0,"duration": 1}
+        }
+        
+    },
+    "dialogueConfig": {
+        "offset": [25,25],
+        "padding": 25
+    },
+    "text": [
+        {
+            "ports": [
+                {
+                    "id": "default", 
+                    "state": "default", 
+                    "position": "def0", 
+                    "transition": {"type": "fade", "ease": "quadInOut", "startDelay": 0.5,"duration": 0.5},
+                    "color": "player0"
+                }
+            ],
+            "config": {
+                "textSize": 45,
+                "textSpeed": 0.05,
+                "textFont": "fonts/futura-pt-bold.ttf",
+                "boxIn": true
+            },
+            "content": "abcdefghijklmnopqrstuvwxyz1234567890!@#$%^&*()_+-={}[]:;\"',./<>?~`áéíóúüñ"
+        },
+        {
+            "ports": [
+                {
+                    "id": "default", 
+                    "state": "default", 
+                    "position": "def1", 
+                    "transition": "none",
+                    "color": "player0"
+                }
+            ],
+            "config": {
+                "textSize": 45,
+                "textSpeed": 0.05,
+                "textFont": "fonts/futura-pt-bold.ttf",
+                "boxIn": false
+            },
+            "content": "what's up guys?"
+        }
+    ]
+}

@@ -71,6 +71,16 @@ class PlayState extends state.State
 		FlxG.switchState(new MainMenu());
 	}
 
+	public static function getPlayerSettings(playerIdx:Int):PlayerSettings
+	{
+		return getPlayer(playerIdx).settings;
+	}
+
+	public static function getPlayer(playerIdx:Int):Player
+	{
+		return Reflect.field(FlxG.state, "players").members[playerIdx];
+	}
+
 	// // var bg:FlxSprite;
 	// public function new(?level:String)
 	// {
