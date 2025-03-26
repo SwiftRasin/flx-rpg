@@ -1,9 +1,13 @@
+//@type legacy
+
 //@import haxe.ui.core.Component;
 //@import haxe.ui.util.ComponentUtil;
 //@import haxe.ui.Toolkit;
 //@import player.Player;
 //@import assets.Assets;
 //@import haxe.ui.containers.dialogs.Dialogs;
+//@import haxe.ui.containers.dialogs.Dialogs.FileDialogTypes;
+//@import haxe.ui.containers.dialogs.Dialog.DialogButton;
 //@import game.GameUtil;
 //@import flixel.FlxG;
 //@import menu.MainMenu;
@@ -33,6 +37,19 @@ sheet.findComponent("diaTest").onClick = function()
 sheet.findComponent("storageTest").onClick = function()
 {
     Storage.test(state.oldState.getPlayerSettings(0));
+}
+sheet.findComponent("openScript").onClick = function() {
+    Dialogs.openFile(function(button, selectedFiles) {
+        if (button == DialogButton.OK) {
+            // updateTabs(selectedFiles[0].text);
+            sheet.findComponent("scriptArea").htmlText = selectedFiles[0].text;
+        }
+    }, {
+        readContents: true,
+        title: "Open Text File",
+        readAsBinary: false,
+        extensions: FileDialogTypes.TEXTS
+    });
 }
 // sheet.findComponent("color").onChange = function()
 // {

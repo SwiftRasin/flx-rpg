@@ -10,41 +10,40 @@
 //@import game.GameUtil;
 //@import battle.BattleState;
 
-trace(PolymodAssets.getPath("assets/shared/images/c64.png"));
+// trace(PolymodAssets.getPath("assets/shared/images/c64.png"));
 //trace("instance thing: " + instance.players);
 
 //var bg:FlxSprite;
 
-createPre = function()
-{
-    var bg = new FlxSprite(0,0).loadGraphic(Assets.getFile("images/bg/grid_bg.png"));
-    instance.add(bg);
-    var bg2 = new FlxSprite(400,0).loadGraphic(Assets.getFile("images/bg/grid_bg.png"));
-    instance.add(bg2);
-    //trace(Assets.mus("drums_test"));
-    FlxG.sound.playMusic(Assets.mus("menu_alt"));
-}
-
-create = function()
-{
-    // trace("creating player 2");
-    // var player2 = new Player(null, 1, 300, 100, new PlayerColor(1), "doodoo", new PlayerControls(1), "default");
-	// trace("adding player 2");
-    // FlxG.state.add(player2);
-    // trace("adding player 2 to the player group");
-	// FlxG.state.players.add(player2);
-    // trace("player" + player2);
+// createPre = function() {
     
-    FlxG.camera.zoom = 2;
-}
+// }
+
+// create = function() {
+    
+// }
+
+savedTypes = [0,0];
 
 updatePost = function()
 {
     FlxG.state.players.forEach(function(plr)
     {
-        if (FlxG.keys.anyJustPressed([plr.getControl("ACTION")])) {
-            trace("pressed the action button");
+        if (FlxG.keys.anyJustPressed([plr.getControl("ACTION2")])) {
+            savedTypes = plr.getMovement();
+            plr.setMovement(plr.movementSettings["sprint"], savedTypes.friction);
         }
+        // if (FlxG.keys.anyPressed([plr.getControl("ACTION2")])) {
+        //     //trace("pressed the action button");
+        //     plr.setMovementType("sprint", "sprint");
+        // }
+        // else
+        //     plr.setMovementType("def", "def");
+        if (FlxG.keys.anyJustReleased([plr.getControl("ACTION2")])) {
+            plr.setMovement(savedTypes.speed, savedTypes.friction);
+        }
+
+
         // var newScale = GameUtil.getWavy(1,"sin",1,0.5);
         // plr.bodyParts.getPart("head").scale.set(newScale, newScale);
         // plr.bodyParts.getPart("head").y -= ((plr.bodyParts.getPart("head").height*newScale)-(plr.bodyParts.getPart("head").height));

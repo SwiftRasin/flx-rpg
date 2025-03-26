@@ -186,22 +186,26 @@ class PlayState extends state.State
 			{
 				// trace("x: " + player.x);
 				// trace("y: " + player.y);
-				if (FlxG.keys.anyPressed([player.getControl(UP)]))
+				if (player.interact == 0)
 				{
-					player.vel.y -= player.speed;
+					if (FlxG.keys.anyPressed([player.getControl(UP)]))
+					{
+						player.vel.y -= player.speed;
+					}
+					if (FlxG.keys.anyPressed([player.getControl(DOWN)]))
+					{
+						player.vel.y += player.speed;
+					}
+					if (FlxG.keys.anyPressed([player.getControl(LEFT)]))
+					{
+						player.vel.x -= player.speed;
+					}
+					if (FlxG.keys.anyPressed([player.getControl(RIGHT)]))
+					{
+						player.vel.x += player.speed;
+					}
 				}
-				if (FlxG.keys.anyPressed([player.getControl(DOWN)]))
-				{
-					player.vel.y += player.speed;
-				}
-				if (FlxG.keys.anyPressed([player.getControl(LEFT)]))
-				{
-					player.vel.x -= player.speed;
-				}
-				if (FlxG.keys.anyPressed([player.getControl(RIGHT)]))
-				{
-					player.vel.x += player.speed;
-				}
+				
 			});
 		}
 		

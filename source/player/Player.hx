@@ -27,7 +27,7 @@ class Player extends FlxObject
 
 	public var bodyParts:BodyParts;
 
-	public var movementSettings:Map<String, Float> = ["def" => 1, "ice" => 0.1];
+	public var movementSettings:Map<String, Float> = ["def" => 1, "ice" => 0.1, "sprint" => 1.5, "sprint_ice" => 0.15];
 	public var frictionSettings:Map<String, Float> = ["def" => 0.7, "ice" => 0.98];
 
 	public var speed:Float;
@@ -35,6 +35,28 @@ class Player extends FlxObject
 	public var friction:Float;
 
 	public var vel:FlxPoint;
+
+	public var interact:Int = 0;
+
+	public function setMovementType(s:String, f:String)
+	{ // speed, friction
+		speed = movementSettings[s];
+		friction = frictionSettings[f];
+	}
+
+	public function setMovement(s:Float, f:Float)
+	{ // speed, friction
+		speed = s;
+		friction = f;
+	}
+
+	public function getMovement()
+	{ // speed, friction
+		return {
+			speed: this.speed,
+			friction: this.friction
+		};
+	}
 
 	public function new(?settings:PlayerSettings, index:Int, x:Float, y:Float, color:PlayerColor, name:String, controls:PlayerControls, skin:String)
 	{

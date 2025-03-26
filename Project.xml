@@ -44,6 +44,10 @@
 	<haxelib name="haxeui-core" />
 	<haxelib name="haxeui-flixel" />
 	<haxelib name="hscript"/>
+	<!-- I can FINALLY USE BETTER HSCRIPT!!!! -->
+	<haxelib name="hscript-iris"/>
+	<haxedef name="hscriptPos"/>
+
 	<haxelib name="polymod"/>
 
 	<!--In case you want to use the addons package-->

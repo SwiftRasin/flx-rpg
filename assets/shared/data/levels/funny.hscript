@@ -1,3 +1,5 @@
+//@type legacy
+
 //@import flixel.FlxSprite;
 //@import assets.Assets;
 //@import flixel.FlxG;

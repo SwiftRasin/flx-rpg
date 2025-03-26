@@ -51,7 +51,17 @@
                 
             </box>
             <box id="run" text="Run">
-                <label text="Run Script..."/>
+                <vbox>
+                    <button id="openScript" text="Open Script"></button>
+                    
+                    <frame text="Code View" collapsible="true">
+                        <scrollview id="codeView" scrollMode="inertial" contentHeight="100%" width="200" height="200" style="border: 1px solid #000; padding: 5px; background-color: #fff;">
+                            <label id="scriptArea" width="500" height="2000" htmlText="no script(s) loaded."/>    
+                        </scrollview>
+                    </frame>
+                </vbox>
+                <!-- <label text="Run Script..."/> -->
+                
             </box>
         </tabview>
     </vbox>
